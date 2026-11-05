@@ -86,7 +86,7 @@ export function MiningCharts() {
           }))
           const hasWork = rows.some((r) => r.workAdded > 0)
           return (
-            <div className={cn('flex flex-col gap-5 transition-opacity', settlements.isValidating && 'opacity-80')}>
+            <div className={cn('flex w-full min-w-0 max-w-full flex-col gap-5 transition-opacity', settlements.isValidating && 'opacity-80')}>
               <dl className="grid grid-cols-2 gap-3 lg:grid-cols-5">
                 <Stat label="Settlements" value={formatInt(d.summary?.settlementCount)} />
                 <Stat label="Active rounds" value={formatInt(d.summary?.activeRoundCount)} />
@@ -100,8 +100,8 @@ export function MiningCharts() {
                 />
               </dl>
 
-              <div className="grid gap-4 lg:grid-cols-2">
-                <figure className="rounded-xl border border-border bg-background/40 p-4">
+              <div className="grid w-full min-w-0 max-w-full gap-4 lg:grid-cols-2">
+                <figure className="min-w-0 max-w-full rounded-xl border border-border bg-background/40 p-4">
                   <figcaption className="mb-3 flex items-baseline justify-between text-sm font-medium">
                     Work added per bucket
                     {!hasWork ? <span className="text-xs font-normal text-muted-foreground">No work settled in range</span> : null}
@@ -123,7 +123,7 @@ export function MiningCharts() {
                   </ChartContainer>
                 </figure>
 
-                <figure className="rounded-xl border border-border bg-background/40 p-4">
+                <figure className="min-w-0 max-w-full rounded-xl border border-border bg-background/40 p-4">
                   <figcaption className="mb-3 text-sm font-medium">Settlements &amp; completed blocks</figcaption>
                   <ChartContainer config={activityConfig} className="h-56 w-full">
                     <BarChart data={rows} margin={{ left: -16, right: 8, top: 8 }} accessibilityLayer>
@@ -138,7 +138,7 @@ export function MiningCharts() {
                 </figure>
               </div>
 
-              <div className="rounded-xl border border-border bg-background/40 p-4">
+              <div className="min-w-0 max-w-full rounded-xl border border-border bg-background/40 p-4">
                 <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
                   <h3 className="text-sm font-medium">Recent mining checkpoints</h3>
                   {d.mining?.nextRound ? (
