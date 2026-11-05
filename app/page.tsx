@@ -76,10 +76,9 @@ export default function Page() {
       savedTheme === 'light' ? 'light' : 'dark'
 
     setTheme(initialTheme)
-    document.documentElement.classList.toggle(
-      'dark',
-      initialTheme === 'dark'
-    )
+
+    document.documentElement.classList.remove('dark', 'light')
+    document.documentElement.classList.add(initialTheme)
 
     setMounted(true)
   }, [])
@@ -89,10 +88,8 @@ export default function Page() {
 
     setTheme(nextTheme)
 
-    document.documentElement.classList.toggle(
-      'dark',
-      nextTheme === 'dark'
-    )
+    document.documentElement.classList.remove('dark', 'light')
+    document.documentElement.classList.add(nextTheme)
 
     localStorage.setItem('squeekpulse-theme', nextTheme)
   }
@@ -100,6 +97,7 @@ export default function Page() {
   function openView(view: View) {
     setActiveView(view)
     setMenuOpen(false)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const selectedItem = menuGroups
@@ -107,17 +105,17 @@ export default function Page() {
     .find((item) => item.id === activeView)
 
   return (
-    <div className="min-h-dvh">
+    <div className="min-h-dvh w-full min-w-0 overflow-x-clip">
 
       <DashboardHeader />
 
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 md:px-6 md:py-8">
+      <main className="mx-auto flex w-full min-w-0 max-w-7xl flex-col gap-6 overflow-x-clip px-4 py-6 sm:px-5 md:gap-6 md:px-6 md:py-8">
 
         {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex w-full min-w-0 flex-wrap items-center justify-between gap-4">
 
-          <div className="flex flex-col gap-1.5">
-            <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
+          <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+            <h1 className="break-words text-2xl font-semibold tracking-tight md:text-3xl">
               SqueekPulse
             </h1>
 
@@ -130,7 +128,7 @@ export default function Page() {
           {mounted && (
             <button
               onClick={changeTheme}
-              className="rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold hover:bg-accent"
+              className="shrink-0 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold hover:bg-accent"
             >
               {theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
             </button>
@@ -138,21 +136,20 @@ export default function Page() {
 
         </div>
 
-        {/* Navigation */}
-        <div className="relative">
+        {/* All Features Menu */}
+        <div className="relative z-40 w-full min-w-0">
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             aria-expanded={menuOpen}
-            className="flex w-full items-center justify-between rounded-xl border border-border bg-card px-4 py-4 text-sm font-semibold hover:bg-accent"
+            className="flex w-full min-w-0 items-center justify-between rounded-xl border border-border bg-card px-4 py-4 text-sm font-semibold hover:bg-accent"
           >
-            <span>☰  All Features </span>
-
+            <span>☰ All Features</span>
             <span>{menuOpen ? '▲' : '▼'}</span>
           </button>
 
           {menuOpen && (
-            <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[70vh] overflow-y-auto rounded-xl border border-border bg-card p-3 shadow-xl">
+            <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[70vh] w-full overflow-y-auto overflow-x-hidden rounded-xl border border-border bg-card p-3 shadow-xl">
 
               {menuGroups.map((group) => (
                 <div key={group.title} className="mb-4 last:mb-0">
@@ -165,18 +162,20 @@ export default function Page() {
                     <button
                       key={item.id}
                       onClick={() => openView(item.id)}
-                      className={`flex w-full items-center justify-between rounded-lg px-3 py-3 text-left text-sm transition-colors hover:bg-accent ${
+                      className={`flex w-full min-w-0 items-center justify-between gap-3 rounded-lg px-3 py-3 text-left text-sm transition-colors hover:bg-accent ${
                         activeView === item.id
                           ? 'bg-accent font-semibold text-primary'
                           : ''
                       }`}
                     >
-                      <span>{item.label}</span>
+                      <span className="min-w-0 break-words">
+                        {item.label}
+                      </span>
 
                       {activeView === item.id ? (
-                        <span>✓</span>
+                        <span className="shrink-0">✓</span>
                       ) : !item.active ? (
-                        <span className="text-xs text-muted-foreground">
+                        <span className="shrink-0 text-xs text-muted-foreground">
                           Soon
                         </span>
                       ) : null}
@@ -193,7 +192,7 @@ export default function Page() {
 
         {/* Dashboard */}
         {activeView === 'dashboard' && (
-          <div className="flex flex-col gap-6">
+          <div className="flex w-full min-w-0 flex-col gap-6">
             <NetworkStatus />
             <WheelActivity />
             <BlockStats />
@@ -205,27 +204,33 @@ export default function Page() {
 
         {/* Wallet Explorer */}
         {activeView === 'wallet' && (
-          <section className="flex flex-col gap-4">
-            <h2 className="text-xl font-bold">Wallet Explorer</h2>
+          <section className="flex w-full min-w-0 flex-col gap-4 overflow-x-clip">
+            <h2 className="text-xl font-bold">
+              Wallet Explorer
+            </h2>
+
             <WalletExplorer />
           </section>
         )}
 
         {/* Transaction Explorer */}
         {activeView === 'transaction' && (
-          <section className="flex flex-col gap-4">
-            <h2 className="text-xl font-bold">Transaction Explorer</h2>
+          <section className="flex w-full min-w-0 flex-col gap-4 overflow-x-clip">
+            <h2 className="text-xl font-bold">
+              Transaction Explorer
+            </h2>
+
             <TransactionExplorer />
           </section>
         )}
 
         {/* Coming Soon */}
         {!['dashboard', 'wallet', 'transaction'].includes(activeView) && (
-          <section className="flex min-h-64 flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-border bg-card p-8 text-center">
+          <section className="flex min-h-64 w-full min-w-0 flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-border bg-card p-6 text-center sm:p-8">
 
             <div className="text-4xl">🚀</div>
 
-            <h2 className="text-xl font-bold">
+            <h2 className="break-words text-xl font-bold">
               {selectedItem?.label ?? 'Coming Soon'}
             </h2>
 
@@ -246,11 +251,11 @@ export default function Page() {
         )}
 
         {/* Footer */}
-        <footer className="py-6 text-center text-xs text-muted-foreground">
+        <footer className="w-full min-w-0 py-6 text-center text-xs text-muted-foreground">
           Data from{' '}
           <a
             href="https://api.squeekchain.com/v1/status"
-            className="underline underline-offset-4 hover:text-foreground"
+            className="break-all underline underline-offset-4 hover:text-foreground"
           >
             api.squeekchain.com
           </a>
@@ -258,7 +263,7 @@ export default function Page() {
         </footer>
 
         {/* Founder */}
-        <div className="flex flex-col items-center gap-3 py-6">
+        <div className="flex w-full min-w-0 flex-col items-center gap-3 py-6">
 
           <img
             src="/6ZPjsZ9v.jpg"
@@ -266,12 +271,11 @@ export default function Page() {
             className="h-32 w-32 rounded-full object-cover"
           />
 
-          <h2 className="text-xl font-bold">
+          <h2 className="text-center text-xl font-bold">
             BAYAZID HOSSAIN
           </h2>
 
           <div className="flex gap-5">
-
             <a
               href="https://x.com/falahDrops"
               target="_blank"
@@ -287,7 +291,6 @@ export default function Page() {
             >
               Telegram
             </a>
-
           </div>
 
         </div>
