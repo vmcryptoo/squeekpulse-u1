@@ -208,3 +208,21 @@ article {
     max-width: 100%;
   }
 }
+/* Prevent horizontal overflow on mobile */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  position: relative;
+}
+
+#root,
+#__next {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
