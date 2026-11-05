@@ -142,6 +142,7 @@ export function MiningCharts() {
                 settlements.isValidating && 'opacity-80',
               )}
             >
+              {/* Statistics */}
               <dl className="grid grid-cols-2 gap-3 lg:grid-cols-5">
                 <Stat
                   label="Settlements"
@@ -177,9 +178,10 @@ export function MiningCharts() {
 
               {/* Charts */}
               <div className="grid min-w-0 gap-4 lg:grid-cols-2">
+
                 {/* Work Added Chart */}
                 <figure className="min-w-0 overflow-hidden rounded-xl border border-border bg-background/40 p-4">
-                  <figcaption className="mb-3 flex items-baseline justify-between gap-2 text-sm font-medium">
+                  <figcaption className="mb-3 flex flex-wrap items-baseline justify-between gap-2 text-sm font-medium">
                     <span>Work added per bucket</span>
 
                     {!hasWork ? (
@@ -191,7 +193,7 @@ export function MiningCharts() {
 
                   <ChartContainer
                     config={workConfig}
-                    className="mx-auto h-44 w-[90%] max-w-full min-w-0"
+                    className="mx-auto h-36 w-[75%] min-w-0"
                   >
                     <AreaChart
                       data={rows}
@@ -211,6 +213,7 @@ export function MiningCharts() {
                             stopColor="var(--color-workAdded)"
                             stopOpacity={0.5}
                           />
+
                           <stop
                             offset="95%"
                             stopColor="var(--color-workAdded)"
@@ -254,7 +257,7 @@ export function MiningCharts() {
                   </ChartContainer>
                 </figure>
 
-                {/* Settlements Chart */}
+                {/* Settlements & Blocks Chart */}
                 <figure className="min-w-0 overflow-hidden rounded-xl border border-border bg-background/40 p-4">
                   <figcaption className="mb-3 text-sm font-medium">
                     Settlements &amp; completed blocks
@@ -262,7 +265,7 @@ export function MiningCharts() {
 
                   <ChartContainer
                     config={activityConfig}
-                    className="mx-auto h-44 w-[90%] max-w-full min-w-0"
+                    className="mx-auto h-36 w-[75%] min-w-0"
                   >
                     <BarChart
                       data={rows}
@@ -334,15 +337,19 @@ export function MiningCharts() {
                           <th scope="col" className="py-2 font-normal">
                             Rounds
                           </th>
+
                           <th scope="col" className="py-2 font-normal">
                             Blocks
                           </th>
+
                           <th scope="col" className="py-2 font-normal">
                             Minted
                           </th>
+
                           <th scope="col" className="py-2 font-normal">
                             Status
                           </th>
+
                           <th scope="col" className="py-2 text-right font-normal">
                             Transaction
                           </th>
