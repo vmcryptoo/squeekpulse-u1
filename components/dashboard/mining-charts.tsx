@@ -191,7 +191,7 @@ export function MiningCharts() {
 
                   <ChartContainer
                     config={workConfig}
-                    className="h-56 w-full min-w-0"
+                    className="mx-auto h-44 w-[90%] max-w-full min-w-0"
                   >
                     <AreaChart
                       data={rows}
@@ -211,7 +211,6 @@ export function MiningCharts() {
                             stopColor="var(--color-workAdded)"
                             stopOpacity={0.5}
                           />
-
                           <stop
                             offset="95%"
                             stopColor="var(--color-workAdded)"
@@ -263,7 +262,7 @@ export function MiningCharts() {
 
                   <ChartContainer
                     config={activityConfig}
-                    className="h-56 w-full min-w-0"
+                    className="mx-auto h-44 w-[90%] max-w-full min-w-0"
                   >
                     <BarChart
                       data={rows}
@@ -332,38 +331,19 @@ export function MiningCharts() {
                     <table className="w-full min-w-[520px] text-sm">
                       <thead>
                         <tr className="text-left text-xs text-muted-foreground">
-                          <th
-                            scope="col"
-                            className="py-2 font-normal"
-                          >
+                          <th scope="col" className="py-2 font-normal">
                             Rounds
                           </th>
-
-                          <th
-                            scope="col"
-                            className="py-2 font-normal"
-                          >
+                          <th scope="col" className="py-2 font-normal">
                             Blocks
                           </th>
-
-                          <th
-                            scope="col"
-                            className="py-2 font-normal"
-                          >
+                          <th scope="col" className="py-2 font-normal">
                             Minted
                           </th>
-
-                          <th
-                            scope="col"
-                            className="py-2 font-normal"
-                          >
+                          <th scope="col" className="py-2 font-normal">
                             Status
                           </th>
-
-                          <th
-                            scope="col"
-                            className="py-2 text-right font-normal"
-                          >
+                          <th scope="col" className="py-2 text-right font-normal">
                             Transaction
                           </th>
                         </tr>
@@ -372,9 +352,7 @@ export function MiningCharts() {
                       <tbody className="font-mono text-[13px] tabular-nums">
                         {d.mining.recentCheckpoints.map((cp) => (
                           <tr
-                            key={
-                              cp.transactionHash + cp.throughRound
-                            }
+                            key={cp.transactionHash + cp.throughRound}
                             className="border-t border-border/60"
                           >
                             <td className="py-2">
