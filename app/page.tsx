@@ -6,6 +6,7 @@ import { TokenEconomy } from '@/components/dashboard/token-economy'
 import { RecentEvents } from '@/components/dashboard/recent-events'
 import { MiningCharts } from '@/components/dashboard/mining-charts'
 import { WalletExplorer } from '@/components/dashboard/wallet-explorer'
+import { TransactionExplorer } from "@/components/dashboard/transaction-explorer"
 
 export default function Page() {
   return (
@@ -28,6 +29,7 @@ export default function Page() {
         <MiningCharts />
         <RecentEvents />
         <WalletExplorer />
+        <TransactionExplorer />
         <footer className="py-6 text-center text-xs text-muted-foreground">
           Data from{' '}
           <a href="https://api.squeekchain.com/v1/status" className="underline underline-offset-4 hover:text-foreground">
