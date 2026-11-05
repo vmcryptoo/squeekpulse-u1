@@ -33,7 +33,7 @@ export function Section({
       id={id}
       aria-labelledby={headingId}
       className={cn(
-        'w-full min-w-0 self-stretch flex flex-col gap-5 rounded-2xl border border-border bg-card/80 p-5 shadow-[0_0_0_1px_oklch(1_0_0/0.02)_inset] md:p-6',
+        'w-full min-w-0 max-w-full self-stretch flex flex-col gap-5 rounded-2xl border border-border bg-card/80 p-5 shadow-[0_0_0_1px_oklch(1_0_0/0.02)_inset] md:p-6',
         className,
       )}
     >
