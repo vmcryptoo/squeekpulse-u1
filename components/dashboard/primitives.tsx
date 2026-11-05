@@ -1,5 +1,3 @@
-'use client'
-
 import type { LucideIcon } from 'lucide-react'
 import { AlertTriangle, ArrowUpRight, CloudOff, RotateCw } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -35,12 +33,12 @@ export function Section({
       id={id}
       aria-labelledby={headingId}
       className={cn(
-        'flex w-full min-w-0 max-w-full flex-col gap-5 overflow-hidden rounded-2xl border border-border bg-card/80 p-4 shadow-[0_0_0_1px_oklch(1_0_0/0.02)_inset] sm:p-5 md:p-6',
+        'w-full min-w-0 self-stretch flex flex-col gap-5 rounded-2xl border border-border bg-card/80 p-5 shadow-[0_0_0_1px_oklch(1_0_0/0.02)_inset] md:p-6',
         className,
       )}
     >
-      <header className="flex min-w-0 flex-wrap items-start justify-between gap-3">
-        <div className="flex min-w-0 flex-1 items-start gap-3">
+      <header className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex min-w-0 items-start gap-3">
           <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/12 text-primary ring-1 ring-primary/25">
             <Icon className="size-4.5" aria-hidden="true" />
           </span>
@@ -52,28 +50,26 @@ export function Section({
 
             <h2
               id={headingId}
-              className="break-words text-base font-semibold tracking-tight md:text-lg"
+              className="text-pretty text-base font-semibold tracking-tight md:text-lg"
             >
               {title}
             </h2>
 
             {description ? (
-              <p className="break-words text-sm text-muted-foreground">
+              <p className="text-pretty text-sm text-muted-foreground">
                 {description}
               </p>
             ) : null}
           </div>
         </div>
 
-        <div className="flex max-w-full flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {action}
           {network ? <NetworkChip network={network} /> : null}
         </div>
       </header>
 
-      <div className="w-full min-w-0 max-w-full">
-        {children}
-      </div>
+      {children}
     </section>
   )
 }
@@ -100,7 +96,7 @@ export function NetworkChip({
   return (
     <span
       className={cn(
-        'inline-flex shrink-0 items-center gap-1.5 rounded-full font-mono font-medium uppercase ring-1 ring-inset',
+        'inline-flex items-center gap-1.5 rounded-full font-mono font-medium uppercase ring-1 ring-inset',
         size === 'sm'
           ? 'px-2 py-0.5 text-[10px] tracking-wider'
           : 'px-2.5 py-1 text-xs tracking-wider',
@@ -138,18 +134,16 @@ export function Stat({
   return (
     <div
       className={cn(
-        'flex min-w-0 max-w-full flex-col gap-1 overflow-hidden rounded-xl border border-border bg-background/40 p-3 sm:p-4',
+        'flex min-w-0 flex-col gap-1 rounded-xl border border-border bg-background/40 p-4',
         className,
       )}
     >
-      <dt className="break-words text-xs text-muted-foreground">
-        {label}
-      </dt>
+      <dt className="text-xs text-muted-foreground">{label}</dt>
 
       <dd className="flex min-w-0 items-baseline gap-1.5">
         <span
           className={cn(
-            'min-w-0 truncate font-mono tabular-nums tracking-tight',
+            'truncate font-mono tabular-nums tracking-tight',
             emphasis
               ? 'text-2xl font-semibold text-foreground md:text-3xl'
               : 'text-lg font-medium',
@@ -221,15 +215,11 @@ export function KeyValue({
   children: React.ReactNode
 }) {
   return (
-    <div className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] items-center gap-2 border-b border-border/60 py-2.5 text-sm last:border-0 sm:gap-4">
-      <dt className="min-w-0 break-words text-muted-foreground">
-        {label}
-      </dt>
+    <div className="flex items-center justify-between gap-4 border-b border-border/60 py-2.5 text-sm last:border-0">
+      <dt className="text-muted-foreground">{label}</dt>
 
-      <dd className="min-w-0 overflow-hidden text-right font-mono text-[12px] tabular-nums sm:text-[13px]">
-        <span className="block truncate">
-          {children}
-        </span>
+      <dd className="min-w-0 truncate text-right font-mono text-[13px] tabular-nums">
+        {children}
       </dd>
     </div>
   )
@@ -252,14 +242,12 @@ export function ExternalLink({
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        'inline-flex max-w-full items-center gap-0.5 rounded-sm text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring',
+        'inline-flex items-center gap-0.5 rounded-sm text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring',
         className,
       )}
     >
-      <span className="truncate">{children}</span>
-
+      {children}
       <ArrowUpRight className="size-3 shrink-0" aria-hidden="true" />
-
       <span className="sr-only"> (opens in a new tab)</span>
     </a>
   )
@@ -276,14 +264,14 @@ export function LoadingState({
     <div
       role="status"
       aria-live="polite"
-      className="grid w-full min-w-0 grid-cols-2 gap-3 lg:grid-cols-4"
+      className="grid grid-cols-2 gap-3 lg:grid-cols-4"
     >
       <span className="sr-only">Loading {label}…</span>
 
       {Array.from({ length: rows }).map((_, i) => (
         <Skeleton
           key={i}
-          className="h-[88px] min-w-0 rounded-xl bg-muted/60"
+          className="h-[88px] rounded-xl bg-muted/60"
         />
       ))}
     </div>
@@ -300,20 +288,20 @@ export function ErrorState({
   return (
     <div
       role="alert"
-      className="flex w-full min-w-0 flex-col items-start gap-3 overflow-hidden rounded-xl border border-destructive/30 bg-destructive/5 p-4 sm:flex-row sm:items-center sm:justify-between"
+      className="flex flex-col items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/5 p-4 sm:flex-row sm:items-center sm:justify-between"
     >
-      <div className="flex min-w-0 items-start gap-3">
+      <div className="flex items-start gap-3">
         <AlertTriangle
           className="mt-0.5 size-4 shrink-0 text-destructive"
           aria-hidden="true"
         />
 
-        <div className="flex min-w-0 flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5">
           <p className="text-sm font-medium">
             Could not reach the Squeekchain API
           </p>
 
-          <p className="break-all font-mono text-xs text-muted-foreground">
+          <p className="font-mono text-xs text-muted-foreground">
             {message}
           </p>
         </div>
@@ -321,7 +309,7 @@ export function ErrorState({
 
       {onRetry ? (
         <Button variant="outline" size="sm" onClick={onRetry}>
-          <RotateCw className="size-3.5" />
+          <RotateCw className="size-3.5" aria-hidden="true" />
           Retry
         </Button>
       ) : null}
@@ -333,22 +321,22 @@ export function UnavailableState({ what }: { what: string }) {
   return (
     <div
       role="status"
-      className="flex w-full min-w-0 items-start gap-3 overflow-hidden rounded-xl border border-warning/25 bg-warning/5 p-4"
+      className="flex items-start gap-3 rounded-xl border border-warning/25 bg-warning/5 p-4"
     >
       <CloudOff
         className="mt-0.5 size-4 shrink-0 text-warning"
         aria-hidden="true"
       />
 
-      <div className="flex min-w-0 flex-col gap-0.5">
+      <div className="flex flex-col gap-0.5">
         <p className="text-sm font-medium">
           {what} is temporarily unavailable
         </p>
 
         <p className="text-xs text-muted-foreground">
-          The API reported{' '}
-          <code className="font-mono">status: unavailable</code>. No values
-          are shown rather than guessing. This section refreshes automatically.
+          The API reported <code className="font-mono">status: unavailable</code>.
+          No values are shown rather than guessing. This section refreshes
+          automatically.
         </p>
       </div>
     </div>
