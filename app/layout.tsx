@@ -19,6 +19,9 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-icon.png',
   },
+  other: {
+  'squeekchain-project': 'bbe9ac2e-8176-45f5-838f-0ce220dc3932',
+},
 }
 
 export const viewport: Viewport = {
