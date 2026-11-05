@@ -146,7 +146,7 @@ export default function Page() {
             aria-expanded={menuOpen}
             className="flex w-full items-center justify-between rounded-xl border border-border bg-card px-4 py-4 text-sm font-semibold hover:bg-accent"
           >
-            <span>☰ Navigation Menu</span>
+            <span>☰  All Features </span>
 
             <span>{menuOpen ? '▲' : '▼'}</span>
           </button>
