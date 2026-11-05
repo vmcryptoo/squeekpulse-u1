@@ -109,7 +109,7 @@ export default function Page() {
 
       <DashboardHeader />
 
-      <main className="mx-auto flex w-full min-w-0 max-w-7xl flex-col gap-6 overflow-x-clip px-4 py-6 sm:px-5 md:gap-6 md:px-6 md:py-8">
+      <main className="mx-0 flex w-full min-w-0 max-w-none flex-col gap-6 overflow-x-clip px-4 py-6 sm:px-5 md:gap-6 md:px-6 md:py-8 lg:mx-auto lg:max-w-7xl">
 
         {/* Header */}
         <div className="flex w-full min-w-0 flex-wrap items-center justify-between gap-4">
