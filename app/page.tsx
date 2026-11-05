@@ -35,6 +35,18 @@ export default function Page() {
           </a>{' '}
           · SqueekPulse is not affiliated with Squeekchain.
         </footer>
+        <div className="flex flex-col items-center gap-3 py-6">
+  <img
+    src="/6ZPjsZ9v.jpg"
+    alt="Bayazid Hossain"
+    className="w-32 h-32 object-cover rounded-full"
+  />
+  <h2 className="text-xl font-bold">BAYAZID HOSSAIN</h2>
+  <div className="flex gap-5">
+    <a href="https://x.com/falahDrops" target="_blank" rel="noreferrer">X</a>
+    <a href="https://t.me/vm_cryptoo" target="_blank" rel="noreferrer">Telegram</a>
+  </div>
+</div>
       </main>
     </div>
   )
