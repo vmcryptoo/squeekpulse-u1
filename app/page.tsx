@@ -63,6 +63,7 @@ export default function Page() {
         <LandingPage
           onInteract={openInteract}
           onExplore={openExplore}
+          onConnectWallet={openInteract}
         />
       )}
 
