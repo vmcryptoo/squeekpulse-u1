@@ -1,394 +1,349 @@
+'use client'
 
-import type { LucideIcon } from 'lucide-react'
-import { AlertTriangle, ArrowUpRight, CloudOff, RotateCw } from 'lucide-react'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import type { NetworkInfo } from '@/lib/squeek/network'
+import { Coins } from 'lucide-react'
+import { Pie, PieChart, Cell } from 'recharts'
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from '@/components/ui/chart'
+import { useEconomy, useNetwork } from '@/hooks/use-squeek'
+import {
+  baseUnitsToNumber,
+  formatInt,
+  formatPercent,
+  formatToken,
+  humanize,
+  ratioPercent,
+} from '@/lib/squeek/format'
+import { explorerAddress } from '@/lib/squeek/network'
+import {
+  DataBoundary,
+  ExternalLink,
+  KeyValue,
+  Section,
+  Stat,
+  StatusPill,
+} from './primitives'
 
-export function Section({
-  id,
-  index,
-  title,
-  description,
-  icon: Icon,
-  network,
-  action,
-  className,
-  children,
-}: {
-  id: string
-  index: number
-  title: string
-  description?: string
-  icon: LucideIcon
-  network?: NetworkInfo
-  action?: React.ReactNode
-  className?: string
-  children: React.ReactNode
-}) {
-  const headingId = `${id}-heading`
+const supplyConfig = {
+  premint: { label: 'Premint', color: 'var(--chart-1)' },
+  mined: { label: 'Mining minted', color: 'var(--chart-4)' },
+  unminted: { label: 'Unminted capacity', color: 'var(--chart-5)' },
+} satisfies ChartConfig
+
+export function TokenEconomy() {
+  const economy = useEconomy()
+  const { network } = useNetwork()
 
   return (
-    <section
-      id={id}
-      aria-labelledby={headingId}
-      className={cn(
-        'w-full min-w-0 self-stretch flex flex-col gap-5 rounded-2xl border border-border bg-card/80 p-5 shadow-[0_0_0_1px_oklch(1_0_0/0.02)_inset] md:p-6',
-        className,
-      )}
+    <Section
+      id="economy"
+      index={4}
+      icon={Coins}
+      title="SQK Token Economy"
+      description="Supply, issuance schedule, staking and NFT collection state read from the economy contracts."
+      network={network}
     >
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex min-w-0 items-start gap-3">
-          <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/12 text-primary ring-1 ring-primary/25">
-            <Icon className="size-4.5" aria-hidden="true" />
-          </span>
+      <DataBoundary
+        label="Token economy"
+        data={economy.data}
+        error={economy.error}
+        isLoading={economy.isLoading}
+        onRetry={() => economy.mutate()}
+      >
+        {(e) => {
+          const decimals = e.asset?.decimals ?? 18
+          const symbol = e.asset?.symbol ?? 'SQK'
+          const s = e.supply
 
-          <div className="flex min-w-0 flex-col gap-0.5">
-            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-              {String(index).padStart(2, '0')}
-            </p>
+          const chartData = s
+            ? [
+                {
+                  key: 'premint',
+                  value:
+                    baseUnitsToNumber(s.premintBaseUnits, decimals) ?? 0,
+                },
+                {
+                  key: 'mined',
+                  value:
+                    baseUnitsToNumber(
+                      s.miningMintedBaseUnits,
+                      decimals,
+                    ) ?? 0,
+                },
+                {
+                  key: 'unminted',
+                  value:
+                    baseUnitsToNumber(
+                      s.unmintedCapacityBaseUnits,
+                      decimals,
+                    ) ?? 0,
+                },
+              ]
+            : []
 
-            <h2
-              id={headingId}
-              className="text-pretty text-base font-semibold tracking-tight md:text-lg"
-            >
-              {title}
-            </h2>
+          return (
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-wrap items-center gap-2">
+                <StatusPill
+                  tone={e.lifecycle?.paused ? 'bad' : 'accent'}
+                >
+                  Stage: {humanize(e.lifecycle?.stage)}
+                </StatusPill>
 
-            {description ? (
-              <p className="text-pretty text-sm text-muted-foreground">
-                {description}
-              </p>
-            ) : null}
-          </div>
-        </div>
+                <StatusPill tone="neutral">
+                  Round {formatInt(e.lifecycle?.currentRound)}
+                </StatusPill>
 
-        <div className="flex flex-wrap items-center gap-2">
-          {action}
-          {network ? <NetworkChip network={network} /> : null}
-        </div>
-      </header>
+                {e.asset ? (
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {symbol} token{' '}
+                    <ExternalLink
+                      href={explorerAddress(network, e.asset.address)}
+                    >
+                      {e.asset.address.slice(0, 10)}…
+                    </ExternalLink>
+                  </span>
+                ) : null}
+              </div>
 
-      {children}
-    </section>
-  )
-}
+              <dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+                <Stat
+                  label="Live supply"
+                  value={formatToken(
+                    s?.liveSupplyBaseUnits,
+                    decimals,
+                    true,
+                  )}
+                  unit={symbol}
+                  emphasis
+                  hint={`${formatPercent(
+                    ratioPercent(
+                      s?.liveSupplyBaseUnits,
+                      s?.capBaseUnits,
+                    ),
+                  )} of cap`}
+                />
 
-export function NetworkChip({
-  network,
-  size = 'sm',
-}: {
-  network: NetworkInfo
-  size?: 'sm' | 'md'
-}) {
-  const styles = {
-    testnet: 'bg-warning/12 text-warning ring-warning/30',
-    mainnet: 'bg-success/12 text-success ring-success/30',
-    unknown: 'bg-muted text-muted-foreground ring-border',
-  }[network.kind]
+                <Stat
+                  label="Supply cap"
+                  value={formatToken(s?.capBaseUnits, decimals, true)}
+                  unit={symbol}
+                  emphasis
+                />
 
-  const label = {
-    testnet: 'Testnet',
-    mainnet: 'Mainnet',
-    unknown: 'Unverified',
-  }[network.kind]
+                <Stat
+                  label="Mined by the wheel"
+                  value={formatToken(
+                    s?.miningMintedBaseUnits,
+                    decimals,
+                  )}
+                  unit={symbol}
+                  emphasis
+                />
 
-  return (
-    <span
-      className={cn(
-        'inline-flex items-center gap-1.5 rounded-full font-mono font-medium uppercase ring-1 ring-inset',
-        size === 'sm'
-          ? 'px-2 py-0.5 text-[10px] tracking-wider'
-          : 'px-2.5 py-1 text-xs tracking-wider',
-        styles,
-      )}
-      title={`${network.name}${network.chainId ? ` · chain ${network.chainId}` : ''}`}
-    >
-      <span className="size-1.5 rounded-full bg-current" aria-hidden="true" />
-      {label}
+                <Stat
+                  label="Burned"
+                  value={formatToken(
+                    s?.totalBurnedBaseUnits,
+                    decimals,
+                  )}
+                  unit={symbol}
+                  emphasis
+                />
+              </dl>
 
-      <span className="sr-only">
-        {' '}
-        data from {network.name}
-        {network.chainId ? `, chain ID ${network.chainId}` : ''}
-      </span>
-    </span>
-  )
-}
+              <div className="grid gap-4 lg:grid-cols-3">
+                <div className="flex flex-col rounded-xl border border-border bg-background/40 p-4">
+                  <h3 className="text-sm font-medium">
+                    Supply allocation
+                  </h3>
 
-export function Stat({
-  label,
-  value,
-  unit,
-  hint,
-  emphasis = false,
-  className,
-}: {
-  label: string
-  value: React.ReactNode
-  unit?: string
-  hint?: React.ReactNode
-  emphasis?: boolean
-  className?: string
-}) {
-  return (
-    <div
-      className={cn(
-        'flex min-w-0 flex-col gap-1 rounded-xl border border-border bg-background/40 p-4',
-        className,
-      )}
-    >
-      <dt className="text-xs text-muted-foreground">{label}</dt>
+                  <ChartContainer
+                    config={supplyConfig}
+                    className="mx-auto aspect-square h-48"
+                  >
+                    <PieChart accessibilityLayer>
+                      <ChartTooltip
+                        content={
+                          <ChartTooltipContent
+                            nameKey="key"
+                            hideLabel
+                          />
+                        }
+                      />
 
-      <dd className="flex min-w-0 items-baseline gap-1.5">
-        <span
-          className={cn(
-            'truncate font-mono tabular-nums tracking-tight',
-            emphasis
-              ? 'text-2xl font-semibold text-foreground md:text-3xl'
-              : 'text-lg font-medium',
-          )}
-        >
-          {value}
-        </span>
+                      <Pie
+                        data={chartData}
+                        dataKey="value"
+                        nameKey="key"
+                        innerRadius={52}
+                        outerRadius={80}
+                        strokeWidth={2}
+                        stroke="var(--card)"
+                      >
+                        {chartData.map((d) => (
+                          <Cell
+                            key={d.key}
+                            fill={`var(--color-${d.key})`}
+                          />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ChartContainer>
 
-        {unit ? (
-          <span className="shrink-0 text-xs text-muted-foreground">
-            {unit}
-          </span>
-        ) : null}
-      </dd>
+                  <ul className="mt-2 flex flex-col gap-1.5 text-xs">
+                    {chartData.map((d) => (
+                      <li
+                        key={d.key}
+                        className="flex items-center justify-between gap-2"
+                      >
+                        <span className="flex items-center gap-2 text-muted-foreground">
+                          <span
+                            className="size-2 rounded-full"
+                            style={{
+                              background:
+                                supplyConfig[
+                                  d.key as keyof typeof supplyConfig
+                                ].color,
+                            }}
+                            aria-hidden="true"
+                          />
 
-      {hint ? (
-        <dd className="truncate text-xs text-muted-foreground">
-          {hint}
-        </dd>
-      ) : null}
-    </div>
-  )
-}
+                          {
+                            supplyConfig[
+                              d.key as keyof typeof supplyConfig
+                            ].label
+                          }
+                        </span>
 
-export type Tone = 'good' | 'warn' | 'bad' | 'neutral' | 'accent'
+                        <span className="font-mono tabular-nums">
+                          {new Intl.NumberFormat('en-US', {
+                            notation: 'compact',
+                            maximumFractionDigits: 2,
+                          }).format(d.value)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-export function StatusPill({
-  tone,
-  children,
-  pulse = false,
-}: {
-  tone: Tone
-  children: React.ReactNode
-  pulse?: boolean
-}) {
-  const styles: Record<Tone, string> = {
-    good: 'bg-success/10 text-success ring-success/25',
-    warn: 'bg-warning/10 text-warning ring-warning/25',
-    bad: 'bg-destructive/10 text-destructive ring-destructive/25',
-    neutral: 'bg-muted text-muted-foreground ring-border',
-    accent: 'bg-primary/12 text-primary ring-primary/25',
-  }
+                <div className="rounded-xl border border-border bg-background/40 p-4">
+                  <h3 className="mb-1 text-sm font-medium">
+                    Issuance schedule
+                  </h3>
 
-  return (
-    <span
-      className={cn(
-        'inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset',
-        styles[tone],
-      )}
-    >
-      <span className="relative flex size-1.5" aria-hidden="true">
-        {pulse ? (
-          <span className="absolute inline-flex size-full animate-ping rounded-full bg-current opacity-60" />
-        ) : null}
+                  <dl>
+                    <KeyValue label="Mining allowance">
+                      {formatToken(
+                        e.schedule?.allowanceBaseUnits,
+                        decimals,
+                        true,
+                      )}{' '}
+                      {symbol}
+                    </KeyValue>
 
-        <span className="relative inline-flex size-1.5 rounded-full bg-current" />
-      </span>
+                    <KeyValue label="Issued so far">
+                      {formatToken(
+                        e.schedule?.issuedBaseUnits,
+                        decimals,
+                      )}{' '}
+                      {symbol}
+                    </KeyValue>
 
-      {children}
-    </span>
-  )
-}
+                    <KeyValue label="Launch bonus">
+                      {formatToken(
+                        e.schedule?.launchBonusBaseUnits,
+                        decimals,
+                        true,
+                      )}{' '}
+                      {symbol}
+                    </KeyValue>
 
-export function KeyValue({
-  label,
-  children,
-}: {
-  label: string
-  children: React.ReactNode
-}) {
-  return (
-    <div className="flex min-w-0 flex-col gap-1 border-b border-border/60 py-2.5 text-sm last:border-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-      <dt className="min-w-0 break-words text-muted-foreground">
-        {label}
-      </dt>
+                    <KeyValue label="Bonus period">
+                      {formatInt(e.schedule?.bonusBlocks)} blocks
+                    </KeyValue>
 
-      <dd className="min-w-0 max-w-full break-all text-left font-mono text-[13px] tabular-nums sm:break-words sm:text-right">
-        {children}
-      </dd>
-    </div>
-  )
-}
+                    <KeyValue label="Halving every">
+                      {formatInt(e.schedule?.halvingBlocks)} blocks
+                    </KeyValue>
 
-export function ExternalLink({
-  href,
-  children,
-  className,
-}: {
-  href: string | null
-  children: React.ReactNode
-  className?: string
-}) {
-  if (!href) return <span className={className}>{children}</span>
+                    <KeyValue label="First-period rate">
+                      {formatToken(
+                        e.schedule?.firstPeriodRateBaseUnits,
+                        decimals,
+                      )}{' '}
+                      {symbol}/block
+                    </KeyValue>
 
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={cn(
-        'inline-flex items-center gap-0.5 rounded-sm text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring',
-        className,
-      )}
-    >
-      {children}
-      <ArrowUpRight className="size-3 shrink-0" aria-hidden="true" />
-      <span className="sr-only"> (opens in a new tab)</span>
-    </a>
-  )
-}
+                    <KeyValue label="Funded blocks">
+                      {formatInt(e.mining?.fundedBlocks)}
+                    </KeyValue>
+                  </dl>
+                </div>
 
-export function LoadingState({
-  rows = 4,
-  label,
-}: {
-  rows?: number
-  label: string
-}) {
-  return (
-    <div
-      role="status"
-      aria-live="polite"
-      className="grid grid-cols-2 gap-3 lg:grid-cols-4"
-    >
-      <span className="sr-only">Loading {label}…</span>
+                <div className="rounded-xl border border-border bg-background/40 p-4">
+                  <h3 className="mb-1 text-sm font-medium">
+                    Staking &amp; NFTs
+                  </h3>
 
-      {Array.from({ length: rows }).map((_, i) => (
-        <Skeleton
-          key={i}
-          className="h-[88px] rounded-xl bg-muted/60"
-        />
-      ))}
-    </div>
-  )
-}
+                  <dl>
+                    <KeyValue label="Total staked">
+                      {formatToken(
+                        e.staking?.totalStakedBaseUnits,
+                        decimals,
+                      )}{' '}
+                      {symbol}
+                    </KeyValue>
 
-export function ErrorState({
-  message,
-  onRetry,
-}: {
-  message: string
-  onRetry?: () => void
-}) {
-  return (
-    <div
-      role="alert"
-      className="flex flex-col items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/5 p-4 sm:flex-row sm:items-center sm:justify-between"
-    >
-      <div className="flex items-start gap-3">
-        <AlertTriangle
-          className="mt-0.5 size-4 shrink-0 text-destructive"
-          aria-hidden="true"
-        />
+                    <KeyValue label="NFT power / SQK power">
+                      {`${formatInt(
+                        e.staking?.totalNftPower,
+                      )} / ${formatInt(e.staking?.totalSqkPower)}`}
+                    </KeyValue>
 
-        <div className="flex flex-col gap-0.5">
-          <p className="text-sm font-medium">
-            Could not reach the Squeekchain API
-          </p>
+                    <KeyValue label="Rewards paid">
+                      {formatToken(
+                        e.staking?.rewards?.paidBaseUnits,
+                        decimals,
+                      )}{' '}
+                      {symbol}
+                    </KeyValue>
 
-          <p className="font-mono text-xs text-muted-foreground">
-            {message}
-          </p>
-        </div>
-      </div>
+                    <KeyValue label="Rewards remaining">
+                      {formatToken(
+                        e.staking?.rewards?.remainingBaseUnits,
+                        decimals,
+                      )}{' '}
+                      {symbol}
+                    </KeyValue>
 
-      {onRetry ? (
-        <Button variant="outline" size="sm" onClick={onRetry}>
-          <RotateCw className="size-3.5" aria-hidden="true" />
-          Retry
-        </Button>
-      ) : null}
-    </div>
-  )
-}
+                    <KeyValue label="NFTs live / cap">
+                      {`${formatInt(
+                        e.nft?.live,
+                      )} / ${formatInt(e.nft?.collectionCap)}`}
+                    </KeyValue>
 
-export function UnavailableState({ what }: { what: string }) {
-  return (
-    <div
-      role="status"
-      className="flex items-start gap-3 rounded-xl border border-warning/25 bg-warning/5 p-4"
-    >
-      <CloudOff
-        className="mt-0.5 size-4 shrink-0 text-warning"
-        aria-hidden="true"
-      />
+                    <KeyValue label="NFTs burned (merges)">
+                      {formatInt(e.nft?.burned)}
+                    </KeyValue>
 
-      <div className="flex flex-col gap-0.5">
-        <p className="text-sm font-medium">
-          {what} is temporarily unavailable
-        </p>
-
-        <p className="text-xs text-muted-foreground">
-          The API reported <code className="font-mono">status: unavailable</code>.
-          No values are shown rather than guessing. This section refreshes
-          automatically.
-        </p>
-      </div>
-    </div>
-  )
-}
-
-/** Renders loading / error / unavailable states and only calls children once real data exists. */
-export function DataBoundary<T extends { status?: string }>({
-  label,
-  data,
-  error,
-  isLoading,
-  onRetry,
-  rows,
-  children,
-}: {
-  label: string
-  data: T | undefined
-  error: { message: string } | undefined
-  isLoading: boolean
-  onRetry: () => void
-  rows?: number
-  children: (data: T) => React.ReactNode
-}) {
-  if (!data && isLoading) {
-    return <LoadingState label={label} rows={rows} />
-  }
-
-  if (!data && error) {
-    return <ErrorState message={error.message} onRetry={onRetry} />
-  }
-
-  if (!data) {
-    return <LoadingState label={label} rows={rows} />
-  }
-
-  if (data.status && data.status !== 'available') {
-    return <UnavailableState what={label} />
-  }
-
-  return (
-    <>
-      {error ? (
-        <p role="status" className="-mt-2 text-xs text-warning">
-          Showing last successful response — latest refresh failed ({error.message}).
-        </p>
-      ) : null}
-
-      {children(data)}
-    </>
+                    <KeyValue label="Auth-minter claims">
+                      {`${formatInt(
+                        e.authMinter?.totalClaimed,
+                      )} claimed · ${formatInt(
+                        e.authMinter?.remaining,
+                      )} left`}
+                    </KeyValue>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          )
+        }}
+      </DataBoundary>
+    </Section>
   )
 }
