@@ -1,68 +1,21 @@
-import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 
-const geistSans = Geist({
-  subsets: ['latin'],
-  variable: '--font-geist-sans',
-})
-
-const geistMono = Geist_Mono({
-  subsets: ['latin'],
-  variable: '--font-geist-mono',
-})
-
 export const metadata: Metadata = {
-  title: 'SqueekPulse — Squeekchain Analytics',
-  description:
-    'Independent analytics for the Squeekchain ecosystem: live network status, hamster wheel telemetry, Squeek blocks, SQK token economy, events, mining activity and wallet lookup.',
-  generator: 'v0.app',
-  icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
-  },
-  other: {
-    'squeekchain-project':
-      'bbe9ac2e-8176-45f5-838f-0ce220dc3932',
-  },
+  title: 'SqueekHub — On-chain tools for Squeekchain',
+  description: 'A self-custody Squeekchain application for SQK payments, batch sends, staking, Squeek NFT transfers and account activity.',
+  applicationName: 'SqueekHub',
+  icons: { icon: '/icon.svg', apple: '/apple-icon.png' },
 }
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  colorScheme: 'dark',
-  themeColor: '#0f0c12',
+  colorScheme: 'light',
+  themeColor: '#f7f1e5',
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
-  return (
-    <html
-      lang="en"
-      className={`dark ${geistSans.variable} ${geistMono.variable} bg-background`}
-    >
-      <body className="min-h-screen w-full max-w-full overflow-x-hidden font-sans antialiased">
-        {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
-      </body>
-    </html>
-  )
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <html lang="en"><body>{children}</body></html>
 }
