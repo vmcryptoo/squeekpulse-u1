@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { DashboardHeader } from '@/components/dashboard/dashboard-header'
 import { NetworkStatus } from '@/components/dashboard/network-status'
+import { NetworkAnalytics } from '@/components/dashboard/network-analytics'
 import { WheelActivity } from '@/components/dashboard/wheel-activity'
 import { BlockStats } from '@/components/dashboard/block-stats'
 import { TokenEconomy } from '@/components/dashboard/token-economy'
@@ -20,7 +21,7 @@ const menuGroups = [
     items: [
       { id: 'dashboard', label: 'Dashboard', active: true },
       { id: 'network-health', label: 'Network Health Monitor', active: true },
-      { id: 'network-analytics', label: 'Network Analytics' },
+      { id: 'network-analytics', label: 'Network Analytics', active: true },
     ],
   },
   {
@@ -218,6 +219,22 @@ export default function Page() {
           </div>
         )}
 
+        {/* Network Analytics */}
+        {activeView === 'network-analytics' && (
+          <div className="flex w-full min-w-0 flex-col gap-6">
+
+            <NetworkAnalytics />
+
+            <button
+              onClick={() => openView('dashboard')}
+              className="w-fit rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+            >
+              Back to Dashboard
+            </button>
+
+          </div>
+        )}
+
         {/* Wallet Explorer */}
         {activeView === 'wallet' && (
           <section className="flex w-full min-w-0 flex-col gap-4 overflow-x-clip">
@@ -244,6 +261,7 @@ export default function Page() {
         {![
           'dashboard',
           'network-health',
+          'network-analytics',
           'wallet',
           'transaction',
         ].includes(activeView) && (
