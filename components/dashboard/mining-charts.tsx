@@ -193,7 +193,7 @@ export function MiningCharts() {
 
                   <ChartContainer
                     config={workConfig}
-                    className="mx-auto h-36 w-[75%] min-w-0"
+                    className="h-52 w-full min-w-0 aspect-auto"
                   >
                     <AreaChart
                       data={rows}
@@ -265,7 +265,7 @@ export function MiningCharts() {
 
                   <ChartContainer
                     config={activityConfig}
-                    className="mx-auto h-36 w-[75%] min-w-0"
+                    className="h-52 w-full min-w-0 aspect-auto"
                   >
                     <BarChart
                       data={rows}
