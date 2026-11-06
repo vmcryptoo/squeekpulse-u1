@@ -1,34 +1,20 @@
 # SqueekPulse
 
-Squeekchain community dashboard and interaction frontend.
+Squeekchain analytics and interaction dashboard.
 
-## Network
-- Ethereum Sepolia testnet (Chain ID `11155111`)
-- SQK ERC-20: `0xd78a3956cF63164d1Fa1C622ad3c66623162Fa1e`
-- Squeeks ERC-721: `0xC4C7982657f00509548F3a3a41db7FA439a6856B`
-- Explorer: https://sepolia.etherscan.io
+## Wallet integration
 
-Contract addresses and deployment details should always be re-verified against https://docs.squeekchain.com/developers/ before a release. The documentation describes a Sepolia test deployment, not a mainnet deployment.
+The app includes an injected EVM wallet connection for wallet browsers/providers such as MetaMask, OKX Wallet and Trust Wallet. Open the deployed site inside the wallet's in-app browser if the regular mobile browser does not expose `window.ethereum`.
 
-## Implemented in this package
-- Existing SqueekPulse dashboard and Squeekchain public API proxy.
-- Injected EVM wallet connection (MetaMask/OKX/Trust Wallet when their EVM provider is exposed as `window.ethereum`).
-- Account and chain change detection.
-- SQK ERC-20 balance read and SQK transfer transaction on Sepolia.
-- Transaction hash link to Sepolia Etherscan.
-
-## Not yet implemented
-Swap, marketplace buying/selling, NFT minting, and staking transactions are not enabled. The frontend must not pretend these work: a swap requires a verified DEX/router and liquidity; a marketplace requires a deployed marketplace contract; NFT minting and staking require exact current contract ABIs, permissions and launch state. Check the official developer docs before implementing those actions.
-
-## Run locally
-
-```bash
-npm install
-npm run dev
-```
+- Network: Ethereum Sepolia (chain ID `11155111`)
+- SQK token: `0xd78a3956cf63164d1fa1c622ad3c66623162fa1e`
+- Connect/disconnect in-app, account/network change listeners, SQK balance read and ERC-20 transfer.
+- This is an injected-provider integration, not WalletConnect QR/deep-link protocol.
 
 ## Deploy
-Import the repository into Vercel and deploy as a Next.js project. No private key or seed phrase is needed. Never add a wallet private key to environment variables or source code.
 
-## Safety
-This is a testnet application. SQK on Sepolia is a test token and has no guaranteed monetary value. Review every wallet transaction before signing.
+Install dependencies with `pnpm install`, then run `pnpm build` and deploy the repository root to Vercel.
+
+## Important contract scope
+
+The Sepolia network and contract addresses are sourced from Squeekchain's developer documentation. The project does not fabricate swap, marketplace, or custom staking contracts. Those tools remain marked as not enabled until their deployed contract addresses, published ABIs, liquidity/marketplace configuration and permissions are verified. Testnet assets have no monetary value. Never enter a seed phrase or private key into this site.
