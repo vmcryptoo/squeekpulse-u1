@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { WalletConnect } from "./wallet-connect";
 
 type InteractPageProps = {
   onBack?: () => void;
   onSelectTool?: (tool: string) => void;
 };
+
+const COMING_SOON_TOOLS = new Set(["token-swap", "nft-marketplace"]);
 
 const tools = [
   {
@@ -215,8 +218,15 @@ export default function InteractPage({
                       {tool.name}
                     </h4>
 
-                    <span className="text-lg font-bold text-[#7652b5] transition-transform group-hover:translate-x-1">
-                      →
+                    <span className="flex items-center gap-2">
+                      {COMING_SOON_TOOLS.has(tool.id) ? (
+                        <span className="rounded-full border border-[#e6d7b8] bg-[#fff1cf] px-2 py-1 text-[9px] font-black tracking-wider text-[#9a6a16]">
+                          COMING SOON
+                        </span>
+                      ) : null}
+                      <span className="text-lg font-bold text-[#7652b5] transition-transform group-hover:translate-x-1">
+                        →
+                      </span>
                     </span>
 
                   </div>
@@ -262,11 +272,27 @@ export default function InteractPage({
               {selectedTool.description}
             </p>
 
-            <p className="mt-2 text-xs leading-6 text-[#786e7f]">
-              This tool requires verified Squeekchain wallet,
-              API or smart contract support before live transactions
-              can be enabled.
-            </p>
+            {COMING_SOON_TOOLS.has(selected) ? (
+              <div className="mt-5 rounded-xl border border-[#e6d7b8] bg-[#fff7e5] p-5">
+                <span className="inline-flex rounded-full bg-[#f4e2b8] px-3 py-1 text-[10px] font-black tracking-[2px] text-[#956516]">
+                  COMING SOON
+                </span>
+                <h4 className="mt-3 text-lg font-black text-[#5d4726]">
+                  This feature is not available yet.
+                </h4>
+                <p className="mt-2 text-sm leading-6 text-[#806d50]">
+                  Squeekchain documentation does not currently provide a verified live {selectedTool.name.toLowerCase()} integration. We will enable this tool when the required protocol contracts and integration details are available.
+                </p>
+              </div>
+            ) : selected === "wallet-connect" ? (
+              <div className="mt-5"><WalletConnect /></div>
+            ) : selected === "send-sqk" ? (
+              <div className="mt-5"><WalletConnect /><p className="mt-3 text-xs text-[#786e7f]">Connect on Sepolia first. The Send SQK action is available in the wallet panel after connection.</p></div>
+            ) : (
+              <p className="mt-2 text-xs leading-6 text-[#786e7f]">
+                This feature is not enabled for live transactions yet. Swap and marketplace require deployed liquidity/pair and marketplace contracts; staking and NFT actions require the verified contract ABI and launch permissions. No fake transaction buttons are shown.
+              </p>
+            )}
 
           </section>
         )}
