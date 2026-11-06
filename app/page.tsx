@@ -19,7 +19,7 @@ const menuGroups = [
     title: 'MAIN',
     items: [
       { id: 'dashboard', label: 'Dashboard', active: true },
-      { id: 'network-health', label: 'Network Health Monitor' },
+      { id: 'network-health', label: 'Network Health Monitor', active: true },
       { id: 'network-analytics', label: 'Network Analytics' },
     ],
   },
@@ -202,6 +202,22 @@ export default function Page() {
           </div>
         )}
 
+        {/* Network Health Monitor */}
+        {activeView === 'network-health' && (
+          <div className="flex w-full min-w-0 flex-col gap-6">
+
+            <NetworkStatus />
+
+            <button
+              onClick={() => openView('dashboard')}
+              className="w-fit rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+            >
+              Back to Dashboard
+            </button>
+
+          </div>
+        )}
+
         {/* Wallet Explorer */}
         {activeView === 'wallet' && (
           <section className="flex w-full min-w-0 flex-col gap-4 overflow-x-clip">
@@ -225,7 +241,12 @@ export default function Page() {
         )}
 
         {/* Coming Soon */}
-        {!['dashboard', 'wallet', 'transaction'].includes(activeView) && (
+        {![
+          'dashboard',
+          'network-health',
+          'wallet',
+          'transaction',
+        ].includes(activeView) && (
           <section className="flex min-h-64 w-full min-w-0 flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-border bg-card p-6 text-center sm:p-8">
 
             <div className="text-4xl">🚀</div>
