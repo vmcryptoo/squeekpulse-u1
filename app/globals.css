@@ -208,7 +208,8 @@ article {
     max-width: 100%;
   }
 }
-/* Prevent horizontal overflow on mobile */
+
+/* PREVENT HORIZONTAL OVERFLOW */
 html,
 body {
   width: 100%;
