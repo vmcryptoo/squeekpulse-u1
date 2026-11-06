@@ -4,268 +4,280 @@ import { useState } from "react";
 
 type InteractPageProps = {
   onBack?: () => void;
-  onConnectWallet?: () => void;
   onSelectTool?: (tool: string) => void;
 };
 
 const tools = [
   {
-    id: "wallet",
+    id: "wallet-connect",
     number: "01",
-    icon: "◉",
+    icon: "▣",
     name: "Wallet Connect",
-    description: "Connect your wallet to the Squeekchain ecosystem.",
-    category: "WALLET",
+    description: "Connect your wallet to Squeekchain.",
   },
   {
-    id: "send",
+    id: "send-sqk",
     number: "02",
-    icon: "↗",
+    icon: "➤",
     name: "Send SQK",
-    description: "Send SQK tokens to another wallet address.",
-    category: "TRANSFER",
+    description: "Send SQK to another wallet address.",
   },
   {
-    id: "swap",
+    id: "token-swap",
     number: "03",
     icon: "⇄",
     name: "Token Swap",
-    description: "Swap supported tokens on the network.",
-    category: "DEFI",
+    description: "Swap tokens on Squeekchain.",
   },
   {
-    id: "marketplace",
+    id: "nft-marketplace",
     number: "04",
-    icon: "◇",
+    icon: "▤",
     name: "NFT Marketplace",
-    description: "Explore and trade supported NFTs.",
-    category: "NFT",
+    description: "Browse, buy and sell Squeekchain NFTs.",
   },
   {
-    id: "mint",
+    id: "nft-mint",
     number: "05",
-    icon: "✧",
+    icon: "▧",
     name: "NFT Mint",
-    description: "Create and mint your own NFTs.",
-    category: "NFT",
+    description: "Create and mint your own NFT.",
   },
   {
     id: "staking",
     number: "06",
-    icon: "◈",
+    icon: "◉",
     name: "Staking",
-    description: "Stake supported tokens and manage positions.",
-    category: "DEFI",
+    description: "Stake SQK and earn rewards.",
   },
   {
-    id: "builder",
+    id: "transaction-builder",
     number: "07",
-    icon: "⌘",
+    icon: "⬡",
     name: "Transaction Builder",
-    description: "Build and prepare blockchain transactions.",
-    category: "DEVELOPER",
+    description: "Create and customize transactions.",
   },
   {
-    id: "contract",
+    id: "contract-interaction",
     number: "08",
     icon: "</>",
     name: "Contract Interaction",
-    description: "Interact with supported smart contracts.",
-    category: "DEVELOPER",
+    description: "Interact with smart contracts.",
   },
   {
-    id: "approvals",
+    id: "token-approvals",
     number: "09",
-    icon: "✓",
+    icon: "⬡",
     name: "Token Approvals",
-    description: "Review and manage token spending approvals.",
-    category: "SECURITY",
+    description: "Manage token spending approvals.",
   },
   {
-    id: "portfolio",
+    id: "my-portfolio",
     number: "10",
     icon: "▥",
     name: "My Portfolio",
-    description: "View your wallet assets and activity.",
-    category: "WALLET",
+    description: "View your assets, NFTs, and activity.",
   },
 ];
 
 export default function InteractPage({
   onBack,
-  onConnectWallet,
   onSelectTool,
 }: InteractPageProps) {
-  const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
 
-  const handleSelect = (id: string) => {
-    setSelectedTool(id);
+  function handleSelect(id: string) {
+    setSelected(id);
     onSelectTool?.(id);
-  };
+  }
+
+  const selectedTool = tools.find(
+    (tool) => tool.id === selected
+  );
 
   return (
-    <main className="min-h-screen bg-[#f6f0e5] px-5 py-8 text-[#29213b] sm:px-8">
+    <main className="min-h-screen bg-[#f6f0e5] px-4 py-6 text-[#29213b] sm:px-8">
 
       <div className="mx-auto max-w-7xl">
 
         {/* Header */}
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[#d9cdbb] pb-6">
+        <header className="flex items-center justify-between rounded-2xl border border-[#e4d8c9] bg-[#fffaf1] px-4 py-4 shadow-[0_4px_0_#e2d6c5]">
 
           <div className="flex items-center gap-3">
+
             <button
               onClick={onBack}
-              className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#d9cdbb] bg-[#fffaf1] text-xl shadow-[0_4px_0_#e2d6c5] transition-all active:translate-y-1 active:shadow-none"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#e2d6c5] bg-[#fffaf1] text-xl shadow-[0_3px_0_#e2d6c5] active:translate-y-1 active:shadow-none"
+              aria-label="Go back"
             >
               ←
             </button>
 
             <div>
-              <h1 className="text-xl font-black">SqueekPulse</h1>
-              <p className="text-xs text-[#8b8190]">Interact Center</p>
+              <h1 className="text-lg font-black">
+                SqueekPulse
+              </h1>
+
+              <p className="text-[11px] text-[#8b8190]">
+                Squeekchain Dashboard
+              </p>
             </div>
+
           </div>
 
-          <button
-            onClick={onConnectWallet}
-            className="rounded-xl bg-[#7652b5] px-5 py-3 text-sm font-bold text-white shadow-[0_5px_0_#4e347e] transition-all hover:-translate-y-0.5 active:translate-y-1 active:shadow-none"
-          >
-            Connect Wallet
-          </button>
+          <span className="rounded-xl bg-[#7652b5] px-4 py-2 text-xs font-black text-white shadow-[0_4px_0_#4e347e]">
+            INTERACT
+          </span>
 
         </header>
 
         {/* Hero */}
-        <section className="py-12 sm:py-16">
+        <section className="border-b border-[#e5dacb] py-12 sm:py-16">
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#d5c5eb] bg-[#eee6f8] px-4 py-2 text-xs font-black tracking-wider text-[#7652b5]">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#dfd0ee] bg-[#eee6f8] px-4 py-2 text-[10px] font-black tracking-wider text-[#7652b5]">
+
             <span className="h-2 w-2 rounded-full bg-[#7652b5]" />
-            BLOCKCHAIN INTERACTION
+
+            ON-CHAIN ACTIONS
+
           </div>
 
-          <h2 className="mt-6 text-4xl font-black tracking-tight sm:text-6xl">
+          <h2 className="mt-6 text-4xl font-black leading-tight sm:text-6xl">
+
             Interact with
-            <span className="block text-[#7652b5]">Squeekchain.</span>
+
+            <span className="block text-[#7652b5]">
+              Squeekchain.
+            </span>
+
           </h2>
 
-          <p className="mt-5 max-w-2xl text-sm leading-7 text-[#786e7f] sm:text-base">
-            Access blockchain tools from one place. Connect your wallet
-            and choose an action to get started.
+          <p className="mt-4 max-w-xl text-sm leading-7 text-[#85798b]">
+            Use essential tools to manage assets, interact with
+            protocols, NFTs, and more on Squeekchain.
           </p>
 
         </section>
 
-        {/* Tool heading */}
-        <section>
+        {/* Tools */}
+        <section className="py-9">
 
-          <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
+          <div className="mb-7 flex flex-wrap items-center justify-between gap-3">
+
             <div>
-              <p className="text-xs font-black uppercase tracking-[3px] text-[#967db7]">
-                Available tools
+              <p className="text-[10px] font-black tracking-[3px] text-[#967db7]">
+                SQUEEKCHAIN TOOLS
               </p>
-              <h3 className="mt-2 text-2xl font-black sm:text-3xl">
-                Choose an Action
+
+              <h3 className="mt-2 text-2xl font-black">
+                Interaction Tools
               </h3>
             </div>
 
-            <span className="rounded-full border border-[#d5c5eb] bg-[#eee6f8] px-4 py-2 text-xs font-bold text-[#7652b5]">
+            <span className="rounded-full border border-[#dfd0ee] bg-[#eee6f8] px-4 py-2 text-xs font-bold text-[#7652b5]">
               10 Tools
             </span>
+
           </div>
 
-          {/* Tools grid */}
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {/* 3 columns desktop, 2 tablet, 1 mobile */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 
             {tools.map((tool) => {
-              const isSelected = selectedTool === tool.id;
+              const isSelected = selected === tool.id;
 
               return (
                 <button
                   key={tool.id}
                   onClick={() => handleSelect(tool.id)}
-                  className={`group rounded-2xl border p-6 text-left transition-all duration-200 active:translate-y-1 ${
+                  className={`group flex min-h-[145px] flex-col rounded-2xl border p-5 text-left transition-all duration-200 active:translate-y-1 ${
                     isSelected
                       ? "border-[#7652b5] bg-[#eee6f8] shadow-[0_4px_0_#7652b5]"
-                      : "border-[#e0d5c5] bg-[#fffaf1] shadow-[0_5px_0_#e2d6c5] hover:-translate-y-1 hover:border-[#c5b1e0] hover:shadow-[0_8px_0_#e2d6c5]"
+                      : "border-[#e4d8c9] bg-[#fffaf1] shadow-[0_4px_0_#e2d6c5] hover:-translate-y-1 hover:border-[#c9b4e5] hover:shadow-[0_7px_0_#e2d6c5]"
                   }`}
                 >
 
                   <div className="flex items-start justify-between">
 
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eee6f8] text-2xl font-black text-[#7652b5] transition-transform group-hover:scale-105">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#eee6f8] text-lg font-black text-[#7652b5]">
                       {tool.icon}
                     </div>
 
-                    <span className="text-xs font-black tracking-wider text-[#b4a8bb]">
+                    <span className="text-[10px] font-black tracking-wider text-[#b4a8bb]">
                       {tool.number}
                     </span>
 
                   </div>
 
-                  <div className="mt-6">
+                  <div className="mt-4 flex items-center justify-between gap-2">
 
-                    <div className="mb-2 flex flex-wrap items-center gap-2">
-                      <h4 className="text-lg font-black">
-                        {tool.name}
-                      </h4>
+                    <h4 className="text-sm font-black">
+                      {tool.name}
+                    </h4>
 
-                      {isSelected && (
-                        <span className="rounded-full bg-[#7652b5] px-2 py-1 text-[9px] font-bold text-white">
-                          SELECTED
-                        </span>
-                      )}
-                    </div>
-
-                    <p className="min-h-[48px] text-sm leading-6 text-[#8b8190]">
-                      {tool.description}
-                    </p>
-
-                  </div>
-
-                  <div className="mt-6 flex items-center justify-between border-t border-[#e8dfd2] pt-4">
-
-                    <span className="text-[10px] font-black tracking-[2px] text-[#967db7]">
-                      {tool.category}
-                    </span>
-
-                    <span className="text-xl font-bold text-[#7652b5] transition-transform group-hover:translate-x-1">
+                    <span className="text-lg font-bold text-[#7652b5] transition-transform group-hover:translate-x-1">
                       →
                     </span>
 
                   </div>
+
+                  <p className="mt-2 text-xs leading-5 text-[#8b8190]">
+                    {tool.description}
+                  </p>
 
                 </button>
               );
             })}
 
           </div>
+
         </section>
 
-        {/* Selected tool information */}
+        {/* Selected Tool Information */}
         {selectedTool && (
-          <section className="mt-10 rounded-2xl border border-[#d5c5eb] bg-[#eee6f8] p-6">
+          <section className="mt-4 rounded-2xl border border-[#d5c5eb] bg-[#eee6f8] p-6">
 
-            <p className="text-xs font-black uppercase tracking-[2px] text-[#967db7]">
-              Selected Tool
+            <div className="flex items-center justify-between gap-3">
+
+              <div>
+                <p className="text-[10px] font-black tracking-[2px] text-[#967db7]">
+                  SELECTED TOOL
+                </p>
+
+                <h3 className="mt-2 text-xl font-black">
+                  {selectedTool.name}
+                </h3>
+              </div>
+
+              <button
+                onClick={() => setSelected(null)}
+                className="rounded-lg bg-white px-3 py-2 text-sm font-bold text-[#7652b5]"
+              >
+                Close
+              </button>
+
+            </div>
+
+            <p className="mt-3 text-xs leading-6 text-[#786e7f]">
+              {selectedTool.description}
             </p>
 
-            <h3 className="mt-2 text-xl font-black">
-              {tools.find((tool) => tool.id === selectedTool)?.name}
-            </h3>
-
-            <p className="mt-2 text-sm leading-6 text-[#786e7f]">
-              This tool has been selected. Its blockchain functionality
-              will be connected after verifying the required Squeekchain
-              wallet, API, and contract support.
+            <p className="mt-2 text-xs leading-6 text-[#786e7f]">
+              This tool requires verified Squeekchain wallet,
+              API or smart contract support before live transactions
+              can be enabled.
             </p>
 
           </section>
         )}
 
         {/* Footer */}
-        <footer className="mt-16 border-t border-[#d9cdbb] py-7 text-center">
-          <p className="text-xs text-[#968b9b]">
-            SqueekPulse · Squeekchain Interaction Center
+        <footer className="mt-12 border-t border-[#e2d7c8] py-6 text-center">
+
+          <p className="text-[10px] text-[#a095a3]">
+            SqueekPulse · Squeekchain Interaction Tools
           </p>
+
         </footer>
 
       </div>
