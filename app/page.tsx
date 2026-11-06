@@ -70,9 +70,6 @@ export default function Page() {
       {page === "interact" && (
         <InteractPage
           onBack={goHome}
-          onConnectWallet={() => {
-            alert("Wallet connection will be integrated after wallet support verification.");
-          }}
           onSelectTool={(tool) => {
             console.log("Selected interaction tool:", tool);
           }}
