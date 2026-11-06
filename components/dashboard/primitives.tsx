@@ -1,5 +1,11 @@
 import type { LucideIcon } from 'lucide-react'
-import { AlertTriangle, ArrowUpRight, CloudOff, RotateCw } from 'lucide-react'
+import {
+  AlertTriangle,
+  ArrowUpRight,
+  CloudOff,
+  RotateCw,
+} from 'lucide-react'
+
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -33,7 +39,7 @@ export function Section({
       id={id}
       aria-labelledby={headingId}
       className={cn(
-        'w-full min-w-0 max-w-full self-stretch flex flex-col gap-5 rounded-2xl border border-border bg-card/80 p-5 shadow-[0_0_0_1px_oklch(1_0_0/0.02)_inset] md:p-6',
+        'flex w-full min-w-0 max-w-full flex-col gap-5 self-stretch rounded-2xl border border-border bg-card/80 p-5 shadow-[0_0_0_1px_oklch(1_0_0/0.02)_inset] md:p-6',
         className,
       )}
     >
@@ -236,7 +242,9 @@ export function ExternalLink({
   children: React.ReactNode
   className?: string
 }) {
-  if (!href) return <span className={className}>{children}</span>
+  if (!href) {
+    return <span className={className}>{children}</span>
+  }
 
   return (
     <a
@@ -319,7 +327,11 @@ export function ErrorState({
   )
 }
 
-export function UnavailableState({ what }: { what: string }) {
+export function UnavailableState({
+  what,
+}: {
+  what: string
+}) {
   return (
     <div
       role="status"
@@ -336,7 +348,8 @@ export function UnavailableState({ what }: { what: string }) {
         </p>
 
         <p className="text-xs text-muted-foreground">
-          The API reported <code className="font-mono">status: unavailable</code>.
+          The API reported{' '}
+          <code className="font-mono">status: unavailable</code>.
           No values are shown rather than guessing. This section refreshes
           automatically.
         </p>
@@ -383,7 +396,8 @@ export function DataBoundary<T extends { status?: string }>({
     <>
       {error ? (
         <p role="status" className="-mt-2 text-xs text-warning">
-          Showing last successful response — latest refresh failed ({error.message}).
+          Showing last successful response — latest refresh failed (
+          {error.message}).
         </p>
       ) : null}
 
